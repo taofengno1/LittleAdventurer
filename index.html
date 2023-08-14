@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Little Adventurer</title>
+    <style>
+        #app {
+            text-align: center;
+        }
+
+        .toggleSpin {
+            margin-top: 20px;
+            width: 200px;
+            height: 40px;
+        }
+    </style>
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 
@@ -15,9 +26,9 @@
     <script>
         const Wheel = {
             template: `
-                <div>
-                    <button @click="toggleSpin">{{ spinning ? '停止转动' : '开始转动' }}</button>
+                <div class="wheel">
                     <canvas ref="wheelCanvas" :width="size" :height="size"></canvas>
+                    <button class="toggleSpin" @click="toggleSpin">{{ spinning ? '停止转动' : '开始转动' }}</button>
                 </div>
             `,
             setup() {
@@ -65,7 +76,7 @@
                         ctx.fillStyle = '#333';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
-                        ctx.font = 'bold 30px sans-serif';
+                        ctx.font = 'bold 16px sans-serif';
                         const textAngle = segmentAngle * (i + 0.5);
                         const textX = (radius * 0.7) * Math.cos(textAngle);
                         const textY = (radius * 0.7) * Math.sin(textAngle);
