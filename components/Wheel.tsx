@@ -7,8 +7,9 @@ import Link from 'next/link';
 const Wheel = () => {
     const wheelCanvas = useRef(null);
     const [spinning, setSpinning] = useState(false);
-    const size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
-    const radius = size / 2;
+    const [width, setWidth] = useState(0);
+    const size = useRef(0);
+    const radius = useRef(0);
     const segments = ["写字", "看书", "打牌", "户外", "运动"];
     const angle = useRef(0);
     const angleIncrement = useRef(0);
@@ -16,16 +17,16 @@ const Wheel = () => {
     const drawWheel = () => {
         const canvas = wheelCanvas.current as any;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, size, size);
+        ctx.clearRect(0, 0, size.current, size.current);
         ctx.save();
-        ctx.translate(size / 2, size / 2);
+        ctx.translate(size.current / 2, size.current / 2);
         ctx.rotate(angle.current);
 
         const segmentAngle = (2 * Math.PI) / segments.length;
         for (let i = 0; i < segments.length; i++) {
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.arc(0, 0, radius, segmentAngle * i, segmentAngle * (i + 1));
+            ctx.arc(0, 0, radius.current, segmentAngle * i, segmentAngle * (i + 1));
             ctx.fillStyle = i % 2 === 0 ? '#60A5FA' : '#FBBF24';
             ctx.fill();
             ctx.stroke();
@@ -35,8 +36,8 @@ const Wheel = () => {
             ctx.textBaseline = 'middle';
             ctx.font = 'bold 16px sans-serif';
             const textAngle = segmentAngle * (i + 0.5);
-            const textX = (radius * 0.7) * Math.cos(textAngle);
-            const textY = (radius * 0.7) * Math.sin(textAngle);
+            const textX = (radius.current * 0.7) * Math.cos(textAngle);
+            const textY = (radius.current * 0.7) * Math.sin(textAngle);
             ctx.fillText(segments[i], textX, textY);
         }
 
@@ -67,12 +68,17 @@ const Wheel = () => {
     };
 
     useEffect(() => {
+        size.current = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+        radius.current = size.current / 2;
+        setWidth(size.current);
+        console.log("Size:", size.current); // 添加这一行
+        console.log("Radius:", radius.current); // 添加这一行
         drawWheel();
     }, []);
 
     return (
         <div className=" text-center">
-            <canvas ref={wheelCanvas} width={size} height={size}></canvas>
+            <canvas ref={wheelCanvas} width={width} height={width}></canvas>
             <div className='flex justify-center'>
                 <MoveUp className='text-red-400' />
             </div>
